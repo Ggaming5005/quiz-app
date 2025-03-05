@@ -33,23 +33,33 @@ function Answers() {
       errorAudio.play();
     }
   }, [isAnswered, answer]);
+
   function handleButtonClick() {
     const buttonAudio = new Audio("/src/Sounds/button-pressed.mp3");
     buttonAudio.play();
   }
+
+  useEffect(() => {
+    const lobbyAudio = new Audio("/src/Sounds/lobby-classic-game.mp3");
+    lobbyAudio.loop = true;
+    lobbyAudio.play();
+    return () => {
+      lobbyAudio.pause();
+      lobbyAudio.currentTime = 0;
+    };
+  }, []);
+
   function handleSubmit(e) {
     e.preventDefault();
     dispatch({ type: "submitAnswer" });
   }
-  
+
   function handleNext(e) {
     e.preventDefault();
     if (e.target.textContent === "Next question")
       dispatch({ type: "nextQuestion" });
     if (e.target.textContent === "Finish") dispatch({ type: "finish" });
   }
-
-
   return (
     <form className="answers" onSubmit={handleSubmit}>
       <div className="answers-sub">
