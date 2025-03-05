@@ -19,28 +19,28 @@ function Answers() {
 
   useEffect(() => {
     if (isAnswered && isCorrect) {
-      const audio = new Audio("/public/Sounds/duolingo-correct.mp3");
+      const audio = new Audio("/Sounds/duolingo-correct.mp3");
       audio.play();
     } else if (isAnswered && !isCorrect && answer) {
-      const audio = new Audio("/public/Sounds/duolingo-wrong.mp3");
+      const audio = new Audio("/Sounds/duolingo-wrong.mp3");
       audio.play();
     }
   }, [isAnswered, isCorrect, answer]);
 
   useEffect(() => {
     if (isAnswered && !answer) {
-      const errorAudio = new Audio("/public/Sounds/error.mp3");
+      const errorAudio = new Audio("/Sounds/error.mp3");
       errorAudio.play();
     }
   }, [isAnswered, answer]);
 
   function handleButtonClick() {
-    const buttonAudio = new Audio("/public/Sounds/button-pressed.mp3");
+    const buttonAudio = new Audio("/Sounds/button-pressed.mp3");
     buttonAudio.play();
   }
 
   useEffect(() => {
-    const lobbyAudio = new Audio("/public/Sounds/lobby-classic-game.mp3");
+    const lobbyAudio = new Audio("/Sounds/lobby-classic-game.mp3");
     lobbyAudio.loop = true;
     lobbyAudio.play();
     return () => {
