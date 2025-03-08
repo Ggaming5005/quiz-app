@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useQuiz } from "../context/QuizContext";
 import LargeButton from "./LargeButton";
 import { useTheme } from "../context/ThemeContext";
@@ -8,6 +8,9 @@ function Answers() {
   const { index, questions, answer, isAnswered, isCorrect, dispatch } =
     useQuiz();
   const { isDarkMode } = useTheme();
+  const [showMixer, setShowMixer] = useState(false);
+  const [volume, setVolume] = useState(1);
+  const audioRef = useRef(new Audio("/Sounds/lobby-classic-game.mp3"));
 
   const options = questions[index].options;
   const optionLetters = ["A", "B", "C", "D"];
@@ -40,14 +43,21 @@ function Answers() {
   }
 
   useEffect(() => {
-    const lobbyAudio = new Audio("/Sounds/lobby-classic-game.mp3");
+    const lobbyAudio = audioRef.current;
     lobbyAudio.loop = true;
+    lobbyAudio.volume = volume;
     lobbyAudio.play();
     return () => {
       lobbyAudio.pause();
       lobbyAudio.currentTime = 0;
     };
   }, []);
+
+  function handleVolumeChange(e) {
+    const newVolume = e.target.value;
+    setVolume(newVolume);
+    audioRef.current.volume = newVolume;
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -60,6 +70,7 @@ function Answers() {
       dispatch({ type: "nextQuestion" });
     if (e.target.textContent === "Finish") dispatch({ type: "finish" });
   }
+  
   return (
     <form className="answers" onSubmit={handleSubmit}>
       <div className="answers-sub">
@@ -122,6 +133,27 @@ function Answers() {
           <span className="answer-error-text">Please select an answer</span>
         </div>
       )}
+      
+      <div className="volume-control" style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "5px" }}>
+        <img 
+          src="/Sounds/volume.png" 
+          className="volume-icon" 
+          alt="Volume" 
+          style={{ cursor: "pointer", width: "30px", height: "30px" }}
+          onClick={() => setShowMixer(!showMixer)}
+        />
+        {showMixer && (
+          <input 
+            type="range" 
+            min="0" 
+            max="1" 
+            step="0.01" 
+            value={volume} 
+            onChange={handleVolumeChange}
+            style={{ width: "150px" }}
+          />
+        )}
+      </div>
     </form>
   );
 }
